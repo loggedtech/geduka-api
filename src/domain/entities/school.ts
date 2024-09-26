@@ -5,6 +5,7 @@ export type SchoolProps = {
   email: string
   phone: string
   taxId: string
+  addressId: string
 }
 
 export class School extends Entity<SchoolProps> {

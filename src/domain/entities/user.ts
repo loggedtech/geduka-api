@@ -1,4 +1,3 @@
-import { Crypt } from '../shared/crypt'
 import { Entity } from '../shared/entity'
 
 export type UserProps = {

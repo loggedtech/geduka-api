@@ -15,6 +15,20 @@
       "when": 1726674704622,
       "tag": "0001_blushing_cyclops",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1727376055358,
+      "tag": "0002_legal_madame_hydra",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1727377824048,
+      "tag": "0003_talented_squirrel_girl",
+      "breakpoints": true
     }
   ]
 }

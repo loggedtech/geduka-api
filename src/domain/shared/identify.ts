@@ -1,14 +1,16 @@
 import { randomUUID } from 'node:crypto'
-import { createId } from '@paralleldrive/cuid2'
+import { createId, isCuid } from '@paralleldrive/cuid2'
+
+export type IdentityType = 'UUID' | 'CUID2'
 
 export class Identify {
   private constructor() {}
 
-  static cuid2(id?: string) {
-    return id ?? createId()
-  }
+  static generate(id?: string, type: IdentityType = 'CUID2') {
+    if (id) {
+      return id
+    }
 
-  static uuid(id?: string) {
-    return id ?? randomUUID()
+    return type === 'CUID2' ? createId() : randomUUID()
   }
 }

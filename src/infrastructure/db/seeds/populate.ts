@@ -8,7 +8,7 @@ async function populate() {
     .insert(addresses)
     .values([
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         zip: '60540232',
         place: 'Rua Nova Conquista',
         number: '2837',
@@ -18,7 +18,7 @@ async function populate() {
         state: 'CE',
       },
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         zip: '60741200',
         place: 'Rua Alvares Cabral',
         number: '601',
@@ -33,7 +33,7 @@ async function populate() {
     .insert(schools)
     .values([
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         name: 'Escola Teste 1',
         email: 'escola1@teste.com',
         phone: '85988764563',
@@ -41,7 +41,7 @@ async function populate() {
         addressId: addressTb[0].id,
       },
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         name: 'Escola Teste 2',
         email: 'escola2@teste.com',
         phone: '85988345726',
@@ -55,37 +55,37 @@ async function populate() {
     .insert(users)
     .values([
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         name: 'Escola Teste 1',
         email: schoolTb[0].email,
         password: Crypt.hash('secret'),
       },
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         name: 'Escola Teste 2',
         email: schoolTb[1].email,
         password: Crypt.hash('secret'),
       },
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         name: 'User Teste 1',
         email: 'user1@teste.com',
         password: Crypt.hash('secret'),
       },
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         name: 'User Teste 2',
         email: 'user2@teste.com',
         password: Crypt.hash('secret'),
       },
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         name: 'User Teste 3',
         email: 'user3@teste.com',
         password: Crypt.hash('secret'),
       },
       {
-        id: Identify.cuid2(),
+        id: Identify.generate(),
         name: 'User Teste 4',
         email: 'user4@teste.com',
         password: Crypt.hash('secret'),

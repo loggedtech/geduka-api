@@ -1,6 +1,8 @@
+import type { AddressGateway } from '~/application/gateways/address.gateway'
 import type { SchoolGateway } from '~/application/gateways/school.gateway'
 import type { UserGateway } from '~/application/gateways/user.gateway'
 import { BadRequest, Created } from '~/application/shared/notify'
+import { Address, type AddressProps } from '~/domain/entities/address'
 
 import { School } from '~/domain/entities/school'
 import { User } from '~/domain/entities/user'
@@ -14,6 +16,7 @@ export type CreateAccountInput = {
   phone: string
   password: string
   taxId: string
+  address: AddressProps
 }
 
 export type CreateAccountOutput = Either<BadRequest, Created>
@@ -23,15 +26,30 @@ export class CreateAccountUseCase
 {
   constructor(
     private readonly userGateway: UserGateway,
-    private readonly schoolGateway: SchoolGateway
+    private readonly schoolGateway: SchoolGateway,
+    private readonly addressGateway: AddressGateway
   ) {}
 
   async execute(input: CreateAccountInput): Promise<CreateAccountOutput> {
-    const { name, email, phone, password, taxId } = input
+    const { name, email, phone, password, taxId, address } = input
 
-    const schoolAlreadyExists = await this.schoolGateway.findByTaxId(taxId)
+    const location =
+      (await this.addressGateway.findByProps(address)) ??
+      Address.instance(address)
 
-    if (schoolAlreadyExists) {
+    await this.addressGateway.create(location)
+
+    const schoolAlreadyExistsByTaxId =
+      await this.schoolGateway.findByTaxId(taxId)
+
+    if (schoolAlreadyExistsByTaxId) {
+      return left(BadRequest.send('School already exists'))
+    }
+
+    const schoolAlreadyExistsByEmail =
+      await this.schoolGateway.findByEmail(email)
+
+    if (schoolAlreadyExistsByEmail) {
       return left(BadRequest.send('School already exists'))
     }
 
@@ -40,6 +58,7 @@ export class CreateAccountUseCase
       email,
       phone,
       taxId,
+      addressId: location.id,
     })
 
     await this.schoolGateway.create(school)

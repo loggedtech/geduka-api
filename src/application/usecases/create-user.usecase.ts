@@ -25,15 +25,13 @@ export class CreateUserUseCase
   async execute(input: CreateUserInput): Promise<CreateUserOutput> {
     const { name, email, phone, password, schoolId } = input
 
-    const userAlreadyExistsByEmail =
-      await this.userGateway.verifyUserByEmail(email)
+    const userAlreadyExistsByEmail = await this.userGateway.findByEmail(email)
 
     if (userAlreadyExistsByEmail) {
       return left(BadRequest.send('Email already exists'))
     }
 
-    const userAlreadyExistsByPhone =
-      await this.userGateway.verifyUserByPhone(phone)
+    const userAlreadyExistsByPhone = await this.userGateway.findByPhone(phone)
 
     if (userAlreadyExistsByPhone) {
       return left(BadRequest.send('Phone already exists'))

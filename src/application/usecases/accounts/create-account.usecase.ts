@@ -1,14 +1,13 @@
-import type { AddressGateway } from '~/application/gateways/address.gateway'
-import type { SchoolGateway } from '~/application/gateways/school.gateway'
-import type { UserGateway } from '~/application/gateways/user.gateway'
-import { BadRequest, Created } from '~/application/shared/notify'
-import { Address, type AddressProps } from '~/domain/entities/address'
-
-import { School } from '~/domain/entities/school'
-import { User } from '~/domain/entities/user'
+import type { AddressProps } from '~/domain/entities/address'
 import { Crypt } from '~/domain/shared/crypt'
 import { type Either, left, right } from '~/domain/shared/either'
 import type { UseCase } from '~/domain/shared/usecase'
+
+import { type BadRequest, Created } from '~/application/shared/notify'
+
+import type { CreateAddressUseCase } from '../create-address.usecase'
+import type { CreateSchoolUseCase } from '../create-school.usecase'
+import type { CreateUserUseCase } from '../create-user.usecase'
 
 export type CreateAccountInput = {
   name: string
@@ -25,35 +24,17 @@ export class CreateAccountUseCase
   implements UseCase<CreateAccountInput, CreateAccountOutput>
 {
   constructor(
-    private readonly userGateway: UserGateway,
-    private readonly schoolGateway: SchoolGateway,
-    private readonly addressGateway: AddressGateway
+    private readonly createAddressUseCase: CreateAddressUseCase,
+    private readonly createSchoolUseCase: CreateSchoolUseCase,
+    private readonly createUserUseCase: CreateUserUseCase
   ) {}
 
   async execute(input: CreateAccountInput): Promise<CreateAccountOutput> {
     const { name, email, phone, password, taxId, address } = input
 
-    const location =
-      (await this.addressGateway.findByProps(address)) ??
-      Address.instance(address)
+    const location = await this.createAddressUseCase.execute(address)
 
-    await this.addressGateway.create(location)
-
-    const schoolAlreadyExistsByTaxId =
-      await this.schoolGateway.findByTaxId(taxId)
-
-    if (schoolAlreadyExistsByTaxId) {
-      return left(BadRequest.send('School already exists'))
-    }
-
-    const schoolAlreadyExistsByEmail =
-      await this.schoolGateway.findByEmail(email)
-
-    if (schoolAlreadyExistsByEmail) {
-      return left(BadRequest.send('School already exists'))
-    }
-
-    const school = School.instance({
+    const school = await this.createSchoolUseCase.execute({
       name,
       email,
       phone,
@@ -61,17 +42,19 @@ export class CreateAccountUseCase
       addressId: location.id,
     })
 
-    await this.schoolGateway.create(school)
+    if (school.isLeft()) return left(school.value)
 
     const passwordHash = Crypt.hash(password)
 
-    const user = User.instance({
+    const user = await this.createUserUseCase.execute({
       name,
       email,
+      phone,
       password: passwordHash,
+      schoolId: school.value.id,
     })
 
-    await this.userGateway.create(user, school.id)
+    if (user.isLeft()) return left(user.value)
 
     return right(Created.send('Account created successfully'))
   }

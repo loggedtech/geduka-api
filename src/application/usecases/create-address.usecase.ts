@@ -13,27 +13,11 @@ export class CreateAddressUseCase
   constructor(private readonly addressGateway: AddressGateway) {}
 
   async execute(input: AddressProps): Promise<CreateAddressOutput> {
-    const { zip, place, number, complement, district, city, state } = input
+    let location = await this.addressGateway.findByProps(input)
 
-    const location =
-      (await this.addressGateway.findByProps({
-        zip,
-        place,
-        number,
-        complement,
-        district,
-        city,
-        state,
-      })) ??
-      Address.instance({
-        zip,
-        place,
-        number,
-        complement,
-        district,
-        city,
-        state,
-      })
+    if (location) return location
+
+    location = Address.instance(input)
 
     await this.addressGateway.create(location)
 

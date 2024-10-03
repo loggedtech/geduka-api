@@ -1,4 +1,4 @@
-import { Crypt } from '~/domain/shared/crypt'
+import { Crypt } from '~/application/shared/crypt'
 import { Identify } from '~/domain/shared/identify'
 import { db } from '..'
 import { addresses, members, schools, users } from '../schema'

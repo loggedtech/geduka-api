@@ -23,7 +23,7 @@ export const schools = pgTable('schools', {
   id: char('id', { length: 24 }).primaryKey(),
   name: varchar('name').notNull(),
   email: varchar('email').unique().notNull(),
-  phone: char('phone', { length: 11 }),
+  phone: char('phone', { length: 11 }).notNull(),
   taxId: varchar('tax_id', { length: 14 }).unique().notNull(),
   addressId: char('address_id', { length: 24 })
     .references(() => addresses.id)
@@ -45,6 +45,7 @@ export const users = pgTable('users', {
   id: char('id', { length: 24 }).primaryKey(),
   name: varchar('name').notNull(),
   email: varchar('email').unique().notNull(),
+  phone: char('phone', { length: 11 }).notNull(),
   password: text('password').notNull(),
   activedAt: timestamp('actived_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true })

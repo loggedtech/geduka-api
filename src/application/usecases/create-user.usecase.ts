@@ -1,11 +1,11 @@
 import { User } from '~/domain/entities/user'
-import { Crypt } from '~/domain/shared/crypt'
-import { type Either, left, right } from '~/domain/shared/either'
-import type { UseCase } from '~/domain/shared/usecase'
-
-import { BadRequest } from '../shared/notify'
 
 import type { UserGateway } from '../gateways/user.gateway'
+import { Crypt } from '../shared/crypt'
+import { type Either, left, right } from '../shared/either'
+import { BadRequest } from '../shared/notify'
+import type { Role } from '../shared/role'
+import type { UseCase } from '../shared/usecase'
 
 export type CreateUserInput = {
   name: string
@@ -13,6 +13,7 @@ export type CreateUserInput = {
   phone: string
   password: string
   schoolId: string
+  role: Role
 }
 
 export type CreateUserOutput = Either<BadRequest, User>
@@ -23,7 +24,7 @@ export class CreateUserUseCase
   constructor(private readonly userGateway: UserGateway) {}
 
   async execute(input: CreateUserInput): Promise<CreateUserOutput> {
-    const { name, email, phone, password, schoolId } = input
+    const { name, email, phone, password, schoolId, role } = input
 
     const userAlreadyExistsByEmail = await this.userGateway.findByEmail(email)
 
@@ -46,7 +47,7 @@ export class CreateUserUseCase
       password: passwordHash,
     })
 
-    await this.userGateway.create(user, schoolId)
+    await this.userGateway.create(user, schoolId, role)
 
     return right(user)
   }

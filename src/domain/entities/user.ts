@@ -1,10 +1,13 @@
 import { Entity } from '../shared/entity'
+import type { Replace } from '../shared/replace'
 
 export type UserProps = {
   name: string
   email: string
   phone: string
   password: string
+  activedAt?: Date
+  createdAt: Date
 }
 
 export class User extends Entity<UserProps> {
@@ -12,7 +15,10 @@ export class User extends Entity<UserProps> {
     super(props, id)
   }
 
-  static instance(props: UserProps, id?: string) {
-    return new User(props, id)
+  static instance(
+    props: Replace<UserProps, { createdAt?: Date }>,
+    id?: string
+  ) {
+    return new User({ ...props, createdAt: props.createdAt ?? new Date() }, id)
   }
 }

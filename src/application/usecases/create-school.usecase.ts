@@ -1,6 +1,7 @@
+import { type Either, left, right } from '~/application/shared/either'
+import type { UseCase } from '~/application/shared/usecase'
+
 import { School } from '~/domain/entities/school'
-import { type Either, left, right } from '~/domain/shared/either'
-import type { UseCase } from '~/domain/shared/usecase'
 
 import type { SchoolGateway } from '../gateways/school.gateway'
 import { BadRequest } from '../shared/notify'

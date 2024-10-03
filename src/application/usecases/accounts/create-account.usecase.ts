@@ -1,18 +1,20 @@
-import type { AddressProps } from '~/domain/entities/address'
-import { Crypt } from '~/domain/shared/crypt'
-import { type Either, left, right } from '~/domain/shared/either'
-import type { UseCase } from '~/domain/shared/usecase'
-
+import { Crypt } from '~/application/shared/crypt'
+import { type Either, left, right } from '~/application/shared/either'
 import { type BadRequest, Created } from '~/application/shared/notify'
+import type { Role } from '~/application/shared/role'
+import type { UseCase } from '~/application/shared/usecase'
 
-import type { CreateAddressUseCase } from '../create-address.usecase'
+import type { AddressProps } from '~/domain/entities/address'
+
 import type { CreateSchoolUseCase } from '../create-school.usecase'
 import type { CreateUserUseCase } from '../create-user.usecase'
+import type { LoadAddressUseCase } from '../load-address.usecase'
 
 export type CreateAccountInput = {
   name: string
   email: string
   phone: string
+  role: Role
   password: string
   taxId: string
   address: AddressProps
@@ -24,15 +26,15 @@ export class CreateAccountUseCase
   implements UseCase<CreateAccountInput, CreateAccountOutput>
 {
   constructor(
-    private readonly createAddressUseCase: CreateAddressUseCase,
+    private readonly loadAddressUseCase: LoadAddressUseCase,
     private readonly createSchoolUseCase: CreateSchoolUseCase,
     private readonly createUserUseCase: CreateUserUseCase
   ) {}
 
   async execute(input: CreateAccountInput): Promise<CreateAccountOutput> {
-    const { name, email, phone, password, taxId, address } = input
+    const { name, email, phone, password, role, taxId, address } = input
 
-    const location = await this.createAddressUseCase.execute(address)
+    const location = await this.loadAddressUseCase.execute(address)
 
     const school = await this.createSchoolUseCase.execute({
       name,
@@ -50,6 +52,7 @@ export class CreateAccountUseCase
       name,
       email,
       phone,
+      role,
       password: passwordHash,
       schoolId: school.value.id,
     })

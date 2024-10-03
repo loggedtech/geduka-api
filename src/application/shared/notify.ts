@@ -1,6 +1,6 @@
-import { HttpCode } from '~/domain/shared/http'
+import { HttpCode } from './http'
 
-export abstract class Notify {
+abstract class Notify {
   message: string
   code: number
 

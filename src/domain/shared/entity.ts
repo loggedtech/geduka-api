@@ -5,7 +5,7 @@ export abstract class Entity<P> {
   public props: P
 
   constructor(props: P, id?: string) {
-    this._id = Identify.cuid2(id)
+    this._id = Identify.generate(id)
     this.props = props
   }
 

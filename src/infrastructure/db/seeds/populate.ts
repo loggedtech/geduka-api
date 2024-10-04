@@ -59,36 +59,42 @@ async function populate() {
         name: 'Escola Teste 1',
         email: schoolTb[0].email,
         password: Crypt.hash('secret'),
+        phone: '85988796417',
       },
       {
         id: Identify.generate(),
         name: 'Escola Teste 2',
         email: schoolTb[1].email,
         password: Crypt.hash('secret'),
+        phone: '85988796418',
       },
       {
         id: Identify.generate(),
         name: 'User Teste 1',
         email: 'user1@teste.com',
         password: Crypt.hash('secret'),
+        phone: '85988796419',
       },
       {
         id: Identify.generate(),
         name: 'User Teste 2',
         email: 'user2@teste.com',
         password: Crypt.hash('secret'),
+        phone: '85988796420',
       },
       {
         id: Identify.generate(),
         name: 'User Teste 3',
         email: 'user3@teste.com',
         password: Crypt.hash('secret'),
+        phone: '85988796421',
       },
       {
         id: Identify.generate(),
         name: 'User Teste 4',
         email: 'user4@teste.com',
         password: Crypt.hash('secret'),
+        phone: '85988796422',
       },
     ])
     .returning()

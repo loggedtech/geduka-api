@@ -13,7 +13,7 @@ export const addresses = pgTable('addresses', {
   zip: char('zip', { length: 8 }).notNull(),
   place: text('place').notNull(),
   number: varchar('number', { length: 20 }).notNull(),
-  complement: varchar('complement', { length: 20 }),
+  complement: varchar('complement', { length: 60 }),
   district: varchar('district').notNull(),
   city: varchar('city').notNull(),
   state: char('state', { length: 2 }).notNull(),

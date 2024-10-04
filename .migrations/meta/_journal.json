@@ -29,6 +29,13 @@
       "when": 1727377824048,
       "tag": "0003_talented_squirrel_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1728072311270,
+      "tag": "0004_daily_kylun",
+      "breakpoints": true
     }
   ]
 }
